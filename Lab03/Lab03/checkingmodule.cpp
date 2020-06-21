@@ -41,7 +41,7 @@ char MainMenu()
 	switch(upperInput)
 	{
 	case 'D':
-		while (correct == false)
+		/*while (correct == false)
 		{
 			try
 			{
@@ -50,7 +50,9 @@ char MainMenu()
 				cout << endl;
 
 				if (amount <= 0)
+				{
 					throw runtime_error("You must enter an amount greater than 0");
+				}
 
 				correct = true;
 			}
@@ -58,12 +60,12 @@ char MainMenu()
 			{
 				cout << e.what() << endl;
 			}
-		}
+		}*/
 		//GetValue(question);
-		Deposit(account, amount);
+		Deposit(account, GetValue(question));
 		break;
 	case 'W':
-		amount = GetValue("How much do you want to withdraw? ==> ");
+		amount = GetValue("How much do you want to withdraw? ==> ", account);
 		Withdraw(account, amount);
 		break;
 	case 'L':
@@ -116,8 +118,8 @@ float GetValue(string question, float upperLimit)
 			cin >> amount;
 			cout << endl;
 
-			if (amount <= 0)
-				throw runtime_error("You must enter an amount greater than 0 and less than or equal to ");
+			if (amount <= 0 || amount > upperLimit)
+				throw runtime_error("You must enter an amount greater than 0, and less than or equal to ");
 
 			correct = true;
 		}
