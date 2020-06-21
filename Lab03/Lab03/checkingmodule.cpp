@@ -6,9 +6,9 @@
 
 using namespace std;
 
-float account;
+double account;
 
-void Deposit(float& account, float amount)
+void Deposit(double& account, double amount)
 {
 	account = account + amount;
 
@@ -20,7 +20,10 @@ char MainMenu()
 {
 	char userInput;
 	char upperInput;
-	float amount;
+	double borrowAmount, intRate;
+	bool correct = false;
+	int months;
+
 	try
 	{
 		cout << "Main Menu ( Enter one of the following )" << endl;
@@ -36,40 +39,19 @@ char MainMenu()
 		MainMenu();
 	}
 
-	string question = "How much do you want to deposit? ==> ";
-	bool correct = false;
 	switch(upperInput)
 	{
 	case 'D':
-		/*while (correct == false)
-		{
-			try
-			{
-				cout << question;
-				cin >> amount;
-				cout << endl;
-
-				if (amount <= 0)
-				{
-					throw runtime_error("You must enter an amount greater than 0");
-				}
-
-				correct = true;
-			}
-			catch (runtime_error& e)
-			{
-				cout << e.what() << endl;
-			}
-		}*/
-		//GetValue(question);
-		Deposit(account, GetValue(question));
+		Deposit(account, GetValue("How much do you want to deposit? ==> "));
 		break;
 	case 'W':
-		amount = GetValue("How much do you want to withdraw? ==> ", account);
-		Withdraw(account, amount);
+		Withdraw(account, GetValue("How much do you want to withdraw? ==> ", account));
 		break;
 	case 'L':
-		cout << "-L"; //Fix
+		intRate = GetInterestRate(GetCreditRating());
+		months = GetLoanMonths();
+		borrowAmount = GetValue("How much do you want to borrow? ");
+		CalculateLoanAmount(borrowAmount, intRate, months);
 		break;
 	case 'Q':
 		exit(1);
@@ -80,10 +62,10 @@ char MainMenu()
 	return userInput;
 }
 
-float GetValue(string question)
+double GetValue(string question)
 {
 	bool correct = false;
-	float amount;
+	double amount;
 	while (correct == false)
 	{
 		try
@@ -105,9 +87,9 @@ float GetValue(string question)
 	return amount;
 }
 
-float GetValue(string question, float upperLimit)
+double GetValue(string question, double upperLimit)
 {
-	float amount;
+	double amount;
 	bool correct = false;
 
 	while (correct == false)
@@ -131,14 +113,25 @@ float GetValue(string question, float upperLimit)
 	return amount;
 }
 
-float GetInterestRate(int creditScore)
+double GetInterestRate(int creditScore)
 {
-	float fl = 0;
-	
-	return fl;
+	double rate;
+	if (creditScore <= 500)
+	{
+		rate = 0.05;
+	}
+	else if (creditScore <= 700)
+	{
+		rate = 0.03;
+	}
+	else
+	{
+		rate = 0.01;
+	}
+	return rate;
 }
 
-void Withdraw(float& account, float amount_to_withdraw)
+void Withdraw(double& account, double amount_to_withdraw)
 {
 	account -= amount_to_withdraw;
 
@@ -146,9 +139,11 @@ void Withdraw(float& account, float amount_to_withdraw)
 	cout << "	Amount $" << account << endl << endl;
 }
 
-void GetLoanMonths()
+int GetLoanMonths()
 {
+	int months = 0;
 
+	return months;
 }
 
 int GetCreditRating()
@@ -171,20 +166,20 @@ int GetCreditRating()
 	return input;
 }
 
-float CalculateLoanAmount(float principal, float interestRate, int num_months_loan)
+double CalculateLoanAmount(double principal, double interestRate, int num_months_loan)
 {
-	float amount;
+	double amount;
 	amount = principal * pow(1 + (interestRate / 12), (num_months_loan / 12));
 	return amount;
 }
 
-float OutputAccount(float amount)
+double OutputAccount(double amount)
 {
-	float totalAmount = 0;
+	double totalAmount = 0;
 	cout << "Interest Rate : " << GetInterestRate(GetCreditRating()) << endl;
 	cout << "Principal : " << endl; //get principal
-	//cout << "Months : " << GetLoanMonths() << endl;
-	//cout << "Your total loan amount is " << CalculateLoanAmount( GetInterestRate(), GetLoanMonths()) //get principal
+	cout << "Months : " << GetLoanMonths() << endl;
+	//cout << "Your total loan amount is " << CalculateLoanAmount(GetInterestRate(), GetLoanMonths()); //get principal
 	return totalAmount;
 }
 
