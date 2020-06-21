@@ -6,7 +6,8 @@
 
 using namespace std;
 
-double account;
+double account, borrowAmount, intRate;
+int months;
 
 void Deposit(double& account, double amount)
 {
@@ -18,12 +19,8 @@ void Deposit(double& account, double amount)
 
 char MainMenu()
 {
-	char userInput;
-	char upperInput;
-	double borrowAmount, intRate;
-	bool correct = false;
-	int months;
-
+	char userInput, upperInput;
+	
 	try
 	{
 		cout << "Main Menu ( Enter one of the following )" << endl;
@@ -52,6 +49,7 @@ char MainMenu()
 		months = GetLoanMonths();
 		borrowAmount = GetValue("How much do you want to borrow? ");
 		CalculateLoanAmount(borrowAmount, intRate, months);
+		OutputAccount(borrowAmount);
 		break;
 	case 'Q':
 		exit(1);
@@ -142,6 +140,29 @@ void Withdraw(double& account, double amount_to_withdraw)
 int GetLoanMonths()
 {
 	int months = 0;
+	bool correct = false;
+
+	while (correct == false)
+	{
+		try
+		{
+			cout << "How many months for the loan? 12, 24, 36 or 60 ==> ";
+			cin >> months;
+			cout << endl;
+			if (months == 12 || months == 24 || months == 36 || months == 60)
+			{
+				correct = true;
+			}
+			else
+			{
+				throw runtime_error("You must enter 12, 24, 36 or 60 only");
+			}
+		}
+		catch (runtime_error e)
+		{
+			cout << e.what() << endl;
+		}
+	}
 
 	return months;
 }
@@ -149,18 +170,24 @@ int GetLoanMonths()
 int GetCreditRating()
 {
 	int input;
-	try
+	bool correct = false;
+	while (correct == false)
 	{
-		cout << "What is your credit rating? [300, 850] ==> ";
-		cin >> input;
-		if (input < 300 || input > 850)
+		try
 		{
-			throw runtime_error("You must choose a value from 300 - 850 inclusive.");
+			cout << "What is your credit rating? [300, 850] ==> ";
+			cin >> input;
+			cout << endl;
+			if (input < 300 || input > 850)
+			{
+				throw runtime_error("You must choose a value from 300 - 850 inclusive.");
+			}
+			correct = true;
 		}
-	}
-	catch (runtime_error& excpt)
-	{
-		cout << excpt.what() << endl;
+		catch (runtime_error& excpt)
+		{
+			cout << excpt.what() << endl;
+		}
 	}
 	
 	return input;
@@ -176,10 +203,10 @@ double CalculateLoanAmount(double principal, double interestRate, int num_months
 double OutputAccount(double amount)
 {
 	double totalAmount = 0;
-	cout << "Interest Rate : " << GetInterestRate(GetCreditRating()) << endl;
-	cout << "Principal : " << endl; //get principal
-	cout << "Months : " << GetLoanMonths() << endl;
-	//cout << "Your total loan amount is " << CalculateLoanAmount(GetInterestRate(), GetLoanMonths()); //get principal
+	cout << "Interest Rate : " << intRate << endl;
+	cout << "Principal : " << borrowAmount << endl; 
+	cout << "Months : " << months << endl;
+	cout << "Your total loan amount is " << CalculateLoanAmount(borrowAmount, intRate, months) << endl << endl;
 	return totalAmount;
 }
 
